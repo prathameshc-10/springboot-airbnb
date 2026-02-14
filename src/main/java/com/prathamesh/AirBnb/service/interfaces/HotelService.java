@@ -4,4 +4,5 @@ import com.prathamesh.AirBnb.dto.HotelDTO;
 
 public interface HotelService {
     HotelDTO createNewHotel(HotelDTO hotelDto);
+    HotelDTO getHotelById(Long hotelId);
 }

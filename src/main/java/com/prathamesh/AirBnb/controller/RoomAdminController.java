@@ -32,4 +32,27 @@ public class RoomAdminController {
     public ResponseEntity<List<RoomDTO>> getAllRoomsInHotel(@PathVariable Long hotelId){
         return ResponseEntity.ok(roomService.getAllRoomsInHotel(hotelId));
     }
+
+    @GetMapping("/{roomId}")
+    @Operation(summary = "Get details of a specific room",
+            description = "Fetches details of specific room in hotel by ID")
+    public ResponseEntity<RoomDTO> getRoomById(@PathVariable Long hotelId, @PathVariable Long roomId){
+        return ResponseEntity.ok(roomService.getRoomById(roomId));
+    }
+
+    @DeleteMapping("/{roomId}")
+    @Operation(summary = "Delete a room",
+            description = "Delete a room from the hotel By ID")
+    public ResponseEntity<Void> deleteRoomById(@PathVariable Long hotelId, @PathVariable Long roomId){
+        roomService.deleteRoomById(roomId);
+        return ResponseEntity.noContent().build();
+    }
+
+    @PutMapping("/{roomId}")
+    @Operation(summary = "Update a room",
+            description = "Update details of a existing room")
+    public ResponseEntity<RoomDTO> updateRoomById(@PathVariable Long hotelId, @PathVariable Long roomId,
+                                                  @RequestBody RoomDTO roomDTO){
+        return ResponseEntity.ok(roomService.updateRoomById(hotelId, roomId, roomDTO));
+    }
 }

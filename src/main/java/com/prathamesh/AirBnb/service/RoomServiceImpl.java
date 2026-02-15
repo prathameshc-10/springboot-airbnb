@@ -7,6 +7,7 @@ import com.prathamesh.AirBnb.exceptions.ResourceNotFoundException;
 import com.prathamesh.AirBnb.repositories.HotelRepository;
 import com.prathamesh.AirBnb.repositories.RoomRepository;
 import com.prathamesh.AirBnb.service.interfaces.RoomService;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
@@ -47,5 +48,45 @@ public class RoomServiceImpl implements RoomService {
                 .stream()
                 .map((element) -> modelMapper.map(element, RoomDTO.class))
                 .collect(Collectors.toList());
+    }
+
+    @Override
+    public RoomDTO getRoomById(Long roomId) {
+        log.info("Getting room with ID: {}", roomId);
+        RoomEntity room = roomRepository
+                .findById(roomId)
+                .orElseThrow(() -> new ResourceNotFoundException("Room not found with ID: " + roomId));
+
+        return modelMapper.map(room, RoomDTO.class);
+    }
+
+    @Override
+    @Transactional
+    public void deleteRoomById(Long roomId) {
+        log.info("Deleting room with ID: {}", roomId);
+        RoomEntity room = roomRepository
+                .findById(roomId)
+                .orElseThrow(() -> new ResourceNotFoundException("Room not found with ID: " + roomId));
+
+        roomRepository.deleteById(roomId);
+    }
+
+    @Override
+    public RoomDTO updateRoomById(Long hotelId, Long roomId, RoomDTO roomDTO) {
+        log.info("Updating the room with ID: {}", roomId);
+        HotelEntity hotel = hotelRepository
+                .findById(hotelId)
+                .orElseThrow(() -> new ResourceNotFoundException("Hotel not found with ID: " + hotelId));
+
+        RoomEntity room = roomRepository
+                .findById(roomId)
+                .orElseThrow(() -> new ResourceNotFoundException("Room not found with ID: " + roomId));
+
+        modelMapper.map(roomDTO, room);
+        room.setId(roomId);
+
+        //If price of inventory updated then update the inventory for this room
+        room = roomRepository.save(room);
+        return modelMapper.map(room, RoomDTO.class);
     }
 }

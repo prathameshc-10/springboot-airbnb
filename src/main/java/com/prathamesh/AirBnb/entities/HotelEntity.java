@@ -1,5 +1,6 @@
 package com.prathamesh.AirBnb.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.springframework.cglib.core.Local;
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -43,4 +44,8 @@ public class HotelEntity {
 
     @Column(nullable = false)
     private Boolean active;
+
+    @OneToMany(mappedBy = "hotel", fetch = FetchType.LAZY)
+    @JsonIgnore
+    private List<RoomEntity> rooms;
 }

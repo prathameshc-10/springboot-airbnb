@@ -60,6 +60,8 @@ public class HotelController {
     }
 
     @GetMapping
+    @Operation(summary = "Get all hotels owned by admin",
+            description = "Retrieve the list of all hotels owned by admin")
     public ResponseEntity<List<HotelDTO>> getAllHotels(){
         return ResponseEntity.ok(hotelService.getAllHotels());
     }

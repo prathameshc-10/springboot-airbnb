@@ -5,7 +5,9 @@ import com.prathamesh.AirBnb.entities.HotelEntity;
 import com.prathamesh.AirBnb.entities.RoomEntity;
 import com.prathamesh.AirBnb.exceptions.ResourceNotFoundException;
 import com.prathamesh.AirBnb.repositories.HotelRepository;
+import com.prathamesh.AirBnb.repositories.InventoryRepository;
 import com.prathamesh.AirBnb.repositories.RoomRepository;
+import com.prathamesh.AirBnb.service.interfaces.InventoryService;
 import com.prathamesh.AirBnb.service.interfaces.RoomService;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -23,6 +25,7 @@ public class RoomServiceImpl implements RoomService {
     private final HotelRepository hotelRepository;
     private final ModelMapper modelMapper;
     private final RoomRepository roomRepository;
+    private final InventoryService inventoryService;
 
     @Override
     public RoomDTO createNewRoom(Long hotelId, RoomDTO roomDTO) {
@@ -34,6 +37,11 @@ public class RoomServiceImpl implements RoomService {
         RoomEntity room = modelMapper.map(roomDTO, RoomEntity.class);
         room.setHotel(hotel);
         roomRepository.save(room);
+
+        if(hotel.getActive()){
+            inventoryService.initializeRoomForAYear(room);
+        }
+
         return modelMapper.map(room, RoomDTO.class);
     }
 

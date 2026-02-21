@@ -36,8 +36,6 @@ public class HotelBookingController {
         return ResponseEntity.ok(bookingService.addGuests(bookingId, guestDtoList));
     }
 
-
-
     @PostMapping("/{bookingId}/cancel")
     @Operation(summary = "Cancel the booking", tags = {"Booking Flow"})
     public ResponseEntity<Void> cancelBooking(@PathVariable Long bookingId) {
